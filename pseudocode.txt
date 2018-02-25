@@ -1,0 +1,108 @@
+function divide_conquer (input: list_of_points)
+
+    // initialize min x and max x
+    initialize min x to infinity
+    initialize max x to 0
+    initialize min y to 0
+    initialize max y to 0
+
+    // get the leftmost and rightmost point
+    // in list of randomly generated points
+    for (x,y) in list_of_points:
+        if x is less than min x then
+            min x = x, min y = y
+        if x is more than max x then    
+            max x = x, min y = y
+
+    set min equals to [min x, min y]
+    set max equals to [max x, max y]
+
+    // initial division
+    set hull_points equals to quickhull(list_of_points, min, max)
+    set hull_points equals to (hull_points + quickhull(list_of_points, max, min))
+
+    returns hull_points
+
+// function to sort and do the quick hull algorithm
+function quickhull (input: list_of_points, min, max)
+
+    //get all the points which situated in the left of the line
+    set left_points equals to get_left_points(min, max, list_of_points)
+
+    //set the furthest point from current line as a new hull point
+    set hull_point equals to max_distance_point(min, max, left_points)
+
+    // return the point max as hull point
+    // if no points left in the left part of the line
+    if length of list hull_point equals to 0 then
+        returns max
+
+    # divide recursively
+    set hullpts equals to quickhull(left_points, min, hull_point)
+    set hullpts equals to (hullpts + quickhull(left_points, hull_point, max))
+
+    returns hullpts
+
+// function to get all points located at the left part
+// of the currently checked line that joins p1 and p2
+function get_left_points (input: p1, p2, points)
+
+    initialize pts as an empty array
+
+    for pt in points do
+        set val equals to ((p2.y-p1.y)*(pt.x-p2.x) - (p2.x-p1.x)*(pt.y-p2.y))
+        if (val not equal to 0) and (val less than 0):
+            insert pt to array pts
+
+    returns array pts    
+
+// returns the furthest point from the line joining p1 and p2
+function max_distance_point (input: p1, p2, points)
+
+    initialize max_dist as 0
+    initialize empty array max_point
+
+    for point in points do
+        if (point.x not equals to p1.x or point.y not equals to p1.y) and (point.y not equals to p2.y or point.x not equals to p2.x):
+            set dist equals to line_distance(p1, p2, point)
+            if dist more than max_dist:
+                set max_dist equals to dist
+                set max_point equals to point
+
+    returns array max_point
+
+// function to calculate distance between a line joining p1 p2 and a point
+function line_distance (input p1, p2, pt)
+    set x1, y1 equals to p1
+    set x2, y2 equals to p2
+    set x0, y0 equals to pt
+    set top equals to absolute of ((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1)
+    set bottom equals to ((y2 - y1)**2 + (x2 - x1) ** 2) ** 0.5
+
+    return result of top divided by bottom
+
+// function to print convex hull result and draw it using matplotlib.pyplot
+function draw (input : points)
+    
+    if length of points is less than 3 :
+        print "convex hull cant be created"
+        exit from function
+
+    set array quick_hull equals to result of function divide_conquer(points)
+
+    print elements inside array quick_hull
+    draw elements inside array quick_hull using matplotlib.myplot
+    exit from function
+
+// MAIN FUNCTION
+main function ()
+
+    input value of n
+    
+    initialize empty array points 
+    random n points, append to array points
+    print elements inside array points
+    scatter elements inside array points using matplotlib.pyplot
+
+    draw(points)
+    show using matplotlib.pyplot
