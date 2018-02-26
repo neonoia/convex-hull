@@ -2,6 +2,7 @@
 # Hafizh Budiman, February 22nd 2018
 # Informatics Engineering, Bandung Institute of Technology, 2018
 
+import time
 import numpy as np 
 import matplotlib.pyplot as plt
 
@@ -103,11 +104,17 @@ def draw(points):
     if (len(points) < 3):
         return
 
-    quick_hull = divide_conquer(points)
+    start_time = time.time() # start timer
+
+    quick_hull = divide_conquer(points) # call divide and conquer function
 
     # print convex hull points result
     print "\nQuick hull result:"
     for x in quick_hull: print x
+
+    # print timestamp
+    print("\nProccess done in: ")
+    print("%s seconds" % (time.time() - start_time))
 
     # draw convex hull result using matplotlib.pyplot
     n = len(quick_hull)
